@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitPathway - Fitness Application</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9fafb;
+    }
+    
+    .section {
+      display: none;
+    }
+    
+    .section.active {
+      display: block;
+    }
+    
+    .nav-link.active {
+      background-color: #9b87f5;
+      color: white;
+    }
+    
+    .nav-link.active svg {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Sidebar -->
+    <div class="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
+      <div class="flex h-16 items-center justify-center border-b">
+        <a href="#" class="flex items-center space-x-2" onclick="showSection('dashboard')">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-fitness-purple">
+            <path d="M6.5 6.5h11"></path><path d="M6.5 12h11"></path><path d="M10.5 17.5h3"></path><path d="M4 4.5V19c0 .6.4 1 1 1h14c.6 0 1-.4 1-1V4.5c0-.6-.4-1-1-1H5c-.6 0-1 .4-1 1z"></path>
+          </svg>
+          <span class="text-xl font-bold text-purple-800">FitPathway</span>
+        </a>
+      </div>
+      <nav class="mt-5 px-2">
+        <div class="space-y-1">
+          <a href="#" class="nav-link group flex items-center rounded-md px-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-purple-600" onclick="setActiveNav(this, 'dashboard')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 h-5 w-5 text-gray-500 group-hover:text-purple-600">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Dashboard
+          </a>
+          <a href="#" class="nav-link group flex items-center rounded-md px-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-purple-600" onclick="setActiveNav(this, 'workouts')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 h-5 w-5 text-gray-500 group-hover:text-purple-600">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M5 8h8"></path><path d="M5 12h8"></path><path d="M5 16h8"></path>
+            </svg>
+            Workouts
+          </a>
+          <a href="#" class="nav-link group flex items-center rounded-md px-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-purple-600" onclick="setActiveNav(this, 'schedule')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 h-5 w-5 text-gray-500 group-hover:text-purple-600">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line>
+            </svg>
+            Schedule
+          </a>
+          <a href="#" class="nav-link group flex items-center rounded-md px-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-purple-600" onclick="setActiveNav(this, 'progress')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 h-5 w-5 text-gray-500 group-hover:text-purple-600">
+              <path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="m13 13 6 6"></path>
+            </svg>
+            Progress
+          </a>
+          <a href="#" class="nav-link group flex items-center rounded-md px-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-purple-600" onclick="setActiveNav(this, 'exercises')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 h-5 w-5 text-gray-500 group-hover:text-purple-600">
+              <path d="M7 5V2"></path><path d="M17 5V2"></path><path d="M5 9h14"></path><rect width="14" height="14" x="5" y="5" rx="2"></rect><path d="M16 15 8 9"></path><path d="M8 15l8-6"></path>
+            </svg>
+            Exercise Library
+          </a>
+          <a href="#" class="nav-link group flex items-center rounded-md px-2 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-purple-600" onclick="setActiveNav(this, 'profile')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 h-5 w-5 text-gray-500 group-hover:text-purple-600">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Profile
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="ml-64">
+      <!-- Dashboard Section -->
+      <div id="dashboard" class="section container mx-auto py-6 px-6">
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">Dashboard</h1>
+              <p class="text-muted-foreground">
+                Track your fitness journey and upcoming workouts
+              </p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="flex items-center space-x-2 px-4 py-2 bg-white border rounded-md hover:bg-gray-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>View Progress</span>
+              </button>
+              <button class="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span>New Workout</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="grid gap-4 md:grid-cols-4">
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-sm font-medium text-gray-500">Total Workouts</p>
+                  <h3 class="text-2xl font-bold mt-1">24</h3>
+                </div>
+                <div class="p-2 bg-purple-100 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-purple-600">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M5 8h8"></path><path d="M5 12h8"></path><path d="M5 16h8"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-green-500 mr-1">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                <span class="text-green-500 mr-1">12%</span>
+                <span class="text-gray-500">from last month</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-sm font-medium text-gray-500">Active Streak</p>
+                  <h3 class="text-2xl font-bold mt-1">5 days</h3>
+                </div>
+                <div class="p-2 bg-orange-100 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-orange-500">
+                    <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"></path><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"></path><circle cx="12" cy="12" r="2"></circle><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"></path><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-green-500 mr-1">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                <span class="text-green-500 mr-1">3 days</span>
+                <span class="text-gray-500">longer than previous</span>
+              </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-sm font-medium text-gray-500">This Week</p>
+                  <h3 class="text-2xl font-bold mt-1">4/6</h3>
+                </div>
+                <div class="p-2 bg-blue-100 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-blue-600">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 67%"></div>
+              </div>
+              <div class="mt-2 text-sm text-gray-500">2 workouts remaining</div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-sm font-medium text-gray-500">Avg. Duration</p>
+                  <h3 class="text-2xl font-bold mt-1">42 min</h3>
+                </div>
+                <div class="p-2 bg-purple-100 rounded-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-purple-600">
+                    <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
+                </div>
+              </div>
+              <div class="mt-4 flex items-center text-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-green-500 mr-1">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                <span class="text-green-500 mr-1">5%</span>
+                <span class="text-gray-500">more than last month</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming & Completed Workouts -->
+          <div class="grid gap-6 md:grid-cols-2">
+            <!-- Upcoming workouts -->
+            <div>
+              <div class="mb-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold">Upcoming Workouts</h2>
+                <button class="text-purple-600 text-sm">View all</button>
+              </div>
+              <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+                  <div class="p-5">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-lg font-semibold">Upper Body Strength</h3>
+                        <div class="flex items-center mt-1 text-sm text-gray-500">
+                          <span class="bg-gray-100 px-2 py-1 rounded mr-2">Strength Training</span>
+                          <span>45 minutes</span>
+                        </div>
+                      </div>
+                      <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
+                          <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path>
+                        </svg>
+                        <span>Today, 5:00 PM</span>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button class="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                        Start Workout
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+                  <div class="p-5">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-lg font-semibold">HIIT Cardio</h3>
+                        <div class="flex items-center mt-1 text-sm text-gray-500">
+                          <span class="bg-gray-100 px-2 py-1 rounded mr-2">Cardio</span>
+                          <span>30 minutes</span>
+                        </div>
+                      </div>
+                      <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1">
+                          <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path>
+                        </svg>
+                        <span>Tomorrow, 7:00 AM</span>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button class="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                        Start Workout
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recently completed -->
+            <div>
+              <div class="mb-4 flex items-center justify-between">
+                <h2 class="text-xl font-semibold">Recently Completed</h2>
+                <button class="text-purple-600 text-sm">View history</button>
+              </div>
+              <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+                  <div class="p-5">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-lg font-semibold">Lower Body Focus</h3>
+                        <div class="flex items-center mt-1 text-sm text-gray-500">
+                          <span class="bg-gray-100 px-2 py-1 rounded mr-2">Strength Training</span>
+                          <span>50 minutes</span>
+                        </div>
+                      </div>
+                      <div class="bg-green-100 px-2 py-1 rounded text-green-700 text-sm font-medium">
+                        Completed
+                      </div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-500">
+                      Yesterday, 6:30 PM
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+                  <div class="p-5">
+                    <div class="flex justify-between items-start">
+                      <div>
+                        <h3 class="text-lg font-semibold">Core Blast</h3>
+                        <div class="flex items-center mt-1 text-sm text-gray-500">
+                          <span class="bg-gray-100 px-2 py-1 rounded mr-2">Strength Training</span>
+                          <span>25 minutes</span>
+                        </div>
+                      </div>
+                      <div class="bg-green-100 px-2 py-1 rounded text-green-700 text-sm font-medium">
+                        Completed
+                      </div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-500">
+                      2 days ago, 7:00 AM
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workouts Section -->
+      <div id="workouts" class="section container mx-auto py-6 px-6 hidden">
+        <div class="space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">Workouts</h1>
+              <p class="text-muted-foreground">
+                Browse and manage your custom workout routines
+              </p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="relative w-full md:w-64">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400">
+                  <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+                </svg>
+                <input type="search" placeholder="Search workouts..." class="w-full pl-8 pr-4 py-2 border rounded-md">
+              </div>
+              <button class="whitespace-nowrap px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4">
+                  <circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path>
+                </svg>
+                Create Workout
+              </button>
+            </div>
+          </div>
+
+          <div class="border-b">
+            <div class="flex">
+              <button class="px-4 py-2 text-sm font-medium border-b-2 border-purple-600 text-purple-600">My Workouts</button>
+              <button class="px-4 py-2 text-sm font-medium text-gray-500">Recommended</button>
+            </div>
+          </div>
+          
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="p-5">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">Upper Body Strength</h3>
+                    <div class="flex items-center mt-1 text-sm text-gray-500">
+                      <span class="bg-gray-100 px-2 py-1 rounded mr-2">Strength Training</span>
+                      <span>45 minutes</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                    Start
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                    </svg>
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="p-5">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">HIIT Cardio</h3>
+                    <div class="flex items-center mt-1 text-sm text-gray-500">
+                      <span class="bg-gray-100 px-2 py-1 rounded mr-2">Cardio</span>
+                      <span>30 minutes</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                    Start
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                    </svg>
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="p-5">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">Lower Body Focus</h3>
+                    <div class="flex items-center mt-1 text-sm text-gray-500">
+                      <span class="bg-gray-100 px-2 py-1 rounded mr-2">Strength Training</span>
+                      <span>50 minutes</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                    Start
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                    </svg>
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="p-5">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">Core Blast</h3>
+                    <div class="flex items-center mt-1 text-sm text-gray-500">
+                      <span class="bg-gray-100 px-2 py-1 rounded mr-2">Strength Training</span>
+                      <span>25 minutes</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 flex space-x-2">
+                  <button class="flex-1 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                    Start
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>
+                    </svg>
+                  </button>
+                  <button class="p-2 border rounded-md hover:bg-gray-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Section -->
+      <div id="schedule" class="section container mx-auto py-6 px-6 hidden">
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">Workout Schedule</h1>
+              <p class="text-muted-foreground">
+                Plan and schedule your workouts for the week
+              </p>
+            </div>
+            <button class="flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4">
+                <circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path>
+              </svg>
+              <span>Add Workout</span>
+            </button>
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-sm border">
+            <!-- Calendar Header -->
+            <div class="flex justify-between items-center mb-6">
+              <div class="flex items-center">
+                <button class="p-1 rounded-md hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="m15 18-6-6 6-6"></path>
+                  </svg>
+                </button>
+                <h2 class="text-lg font-semibold mx-4">April 15 - April 21, 2025</h2>
+                <button class="p-1 rounded-md hover:bg-gray-100">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+                    <path d="m9 18 6-6-6-6"></path>
+                  </svg>
+                </button>
+              </div>
+              <div>
+                <button class="px-3 py-1 text-sm border rounded-md text-gray-700 hover:bg-gray-50">Today</button>
+              </div>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-2">
+              <!-- Day Headers -->
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Sun</div>
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Mon</div>
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Tue</div>
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Wed</div>
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Thu</div>
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Fri</div>
+              <div class="text-center font-medium text-gray-500 text-sm py-2">Sat</div>
+
+              <!-- Calendar Cells -->
+              <!-- Week 1 -->
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+
+              <!-- Week 2 -->
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">15</div>
+                <div class="bg-purple-100 rounded p-1 text-xs text-purple-700 mb-1">Upper Body Strength</div>
+              </div>
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">16</div>
+                <div class="bg-blue-100 rounded p-1 text-xs text-blue-700 mb-1">HIIT Cardio</div>
+              </div>
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">17</div>
+              </div>
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">18</div>
+                <div class="bg-purple-100 rounded p-1 text-xs text-purple-700 mb-1">Lower Body Focus</div>
+              </div>
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">19</div>
+              </div>
+
+              <!-- Week 3 -->
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">20</div>
+                <div class="bg-green-100 rounded p-1 text-xs text-green-700 mb-1">Yoga Flow</div>
+              </div>
+              <div class="border rounded-md min-h-[120px] p-2">
+                <div class="text-right mb-1 text-gray-500 text-sm">21</div>
+              </div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+              <div class="border rounded-md min-h-[120px] p-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Section -->
+      <div id="progress" class="section container mx-auto py-6 px-6 hidden">
+        <div class="space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">Progress Tracking</h1>
+              <p class="text-muted-foreground">
+                Monitor your fitness journey and workout achievements
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <select class="h-10 w-[180px] border rounded-md px-3">
+                <option value="week">This Week</option>
+                <option value="month" selected>This Month</option>
+                <option value="year">This Year</option>
+                <option value="all">All Time</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <p class="text-sm font-medium text-gray-500">Weekly Workouts</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-gray-500">
+                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line>
+                </svg>
+              </div>
+              <div class="text-2xl font-bold">9</div>
+              <p class="text-xs text-gray-500">
+                +20% from last month
+              </p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <p class="text-sm font-medium text-gray-500">Avg. Workout Duration</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-gray-500">
+                  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="text-2xl font-bold">42 min</div>
+              <p class="text-xs text-gray-500">
+                +5% from last month
+              </p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div class="flex flex-row items-center justify-between space-y-0 pb-2">
+                <p class="text-sm font-medium text-gray-500">Total Weight Lifted</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 text-gray-500">
+                  <path d="M18 5h3"></path><path d="M3 5h3"></path><path d="M10 5h4"></path><path d="M16 5v10"></path><path d="M8 5v10"></path><path d="M21 5v6"></path><path d="M3 5v6"></path><path d="M21 11h-4"></path><path d="M7 11H3"></path><path d="M12 11v8"></path><path d="M12 19h7"></path><path d="M5 19h7"></path>
+                </svg>
+              </div>
+              <div class="text-2xl font-bold">12,450 lbs</div>
+              <p class="text-xs text-gray-500">
+                +8% from last month
+              </p>
+            </div>
+          </div>
+
+          <div class="border-b">
+            <div class="flex">
+              <button class="px-4 py-2 text-sm font-medium border-b-2 border-purple-600 text-purple-600">Overview</button>
+              <button class="px-4 py-2 text-sm font-medium text-gray-500">Workouts</button>
+              <button class="px-4 py-2 text-sm font-medium text-gray-500">Body Stats</button>
+              <button class="px-4 py-2 text-sm font-medium text-gray-500">Goals</button>
+            </div>
+          </div>
+
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Workout Frequency</h3>
+              </div>
+              <div class="h-64 flex items-end justify-around px-4">
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-16 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Mon</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-0 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Tue</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-8 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Wed</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-24 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Thu</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-8 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Fri</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-16 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Sat</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-purple-600 w-10 h-0 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Sun</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border p-4">
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Weekly Calories Burned (est.)</h3>
+              </div>
+              <div class="h-64 flex items-end justify-around px-4">
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-blue-500 w-10 h-24 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Week 1</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-blue-500 w-10 h-32 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Week 2</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-blue-500 w-10 h-28 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Week 3</span>
+                </div>
+                <div class="flex flex-col items-center space-y-2">
+                  <div class="bg-blue-500 w-10 h-40 rounded-t-md"></div>
+                  <span class="text-xs text-gray-500">Week 4</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exercise Library Section -->
+      <div id="exercises" class="section container mx-auto py-6 px-6 hidden">
+        <div class="space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-2xl font-bold tracking-tight">Exercise Library</h1>
+              <p class="text-muted-foreground">
+                Browse our collection of exercises to build your perfect workout
+              </p>
+            </div>
+            
+            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md">
+              Selected Exercises (3)
+            </button>
+          </div>
+
+          <!-- Filters and search -->
+          <div class="flex flex-col md:flex-row gap-4">
+            <div class="relative flex-grow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400">
+                <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+              </svg>
+              <input
+                type="search"
+                placeholder="Search exercises..."
+                class="w-full pl-8 pr-4 py-2 border rounded-md"
+              />
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 md:flex md:flex-row">
+              <div class="w-full md:w-48">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Muscle Group</label>
+                <select class="w-full h-10 border rounded-md px-3">
+                  <option value="all">All Muscles</option>
+                  <option value="chest">Chest</option>
+                  <option value="back">Back</option>
+                  <option value="legs">Legs</option>
+                  <option value="arms">Arms</option>
+                  <option value="shoulders">Shoulders</option>
+                  <option value="core">Core</option>
+                </select>
+              </div>
+              
+              <div class="w-full md:w-48">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                <select class="w-full h-10 border rounded-md px-3">
+                  <option value="all">All Levels</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exercise cards -->
+          <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="h-48 bg-gray-200 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Push-ups" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">Push-ups</h3>
+                    <div class="flex items-center mt-1 gap-2">
+                      <span class="bg-gray-100 px-2 py-1 rounded text-xs">Chest</span>
+                      <span class="bg-green-100 px-2 py-1 rounded text-xs text-green-700">Beginner</span>
+                    </div>
+                  </div>
+                  <button class="p-2 bg-purple-100 rounded-full text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M12 5v14"></path><path d="M5 12h14"></path>
+                    </svg>
+                  </button>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">
+                  A classic bodyweight exercise that works the chest, triceps, and shoulders.
+                </p>
+                <button class="mt-4 w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                  View Details
+                </button>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="h-48 bg-gray-200 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Squats" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">Squats</h3>
+                    <div class="flex items-center mt-1 gap-2">
+                      <span class="bg-gray-100 px-2 py-1 rounded text-xs">Legs</span>
+                      <span class="bg-green-100 px-2 py-1 rounded text-xs text-green-700">Beginner</span>
+                    </div>
+                  </div>
+                  <button class="p-2 bg-purple-100 rounded-full text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M12 5v14"></path><path d="M5 12h14"></path>
+                    </svg>
+                  </button>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">
+                  A compound exercise that targets the quadriceps, hamstrings, and glutes.
+                </p>
+                <button class="mt-4 w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                  View Details
+                </button>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
+              <div class="h-48 bg-gray-200 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1603287681836-b174ce5074c2?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3" alt="Deadlifts" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="text-lg font-semibold">Deadlifts</h3>
+                    <div class="flex items-center mt-1 gap-2">
+                      <span class="bg-gray-100 px-2 py-1 rounded text-xs">Back</span>
+                      <span class="bg-yellow-100 px-2 py-1 rounded text-xs text-yellow-700">Intermediate</span>
+                    </div>
+                  </div>
+                  <button class="p-2 bg-purple-100 rounded-full text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M12 5v14"></path><path d="M5 12h14"></path>
+                    </svg>
+                  </button>
+                </div>
+                <p class="mt-2 text-sm text-gray-600">
+                  A compound movement that works the entire posterior chain and builds overall strength.
+                </p>
+                <button class="mt-4 w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Section -->
+      <div id="profile" class="section container mx-auto py-6 px-6 hidden">
+        <div class="space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
+            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 h-4 w-4">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline>
+              </svg>
+              Save Changes
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Profile Image and Basic Info Card -->
+            <div class="bg-white rounded-lg border shadow-sm">
+              <div class="p-6 border-b">
+                <h3 class="text-2xl font-semibold">Profile Picture</h3>
+              </div>
+              <div class="p-6 flex flex-col items-center">
+                <div class="relative mb-4">
+                  <div class="h-32 w-32 rounded-full bg-gray-200 overflow-hidden">
+                    <img src="https://source.unsplash.com/random/400x400/?fitness" alt="Profile" class="h-full w-full object-cover" />
+                  </div>
+                  <button class="absolute bottom-0 right-0 rounded-full bg-purple-600 hover:bg-purple-700 text-white p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle>
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="w-full space-y-4">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium">Full Name</label>
+                    <input type="text" value="Rahul Kumar" class="w-full h-10 px-3 py-2 border rounded-md">
+                  </div>
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium">Email</label>
+                    <input type="email" value="rk936503@gmail.com" class="w-full h-10 px-3 py-2 border rounded-md">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Profile Details Card -->
+            <div class="bg-white rounded-lg border shadow-sm col-span-2">
+              <div class="p-6 border-b">
+                <h3 class="text-2xl font-semibold">Profile Details</h3>
+              </div>
+              <div class="p-6">
+                <div class="border-b">
+                  <div class="flex mb-4">
+                    <button class="px-4 py-2 text-sm font-medium border-b-2 border-purple-600 text-purple-600">Personal Info</button>
+                    <button class="px-4 py-2 text-sm font-medium text-gray-500">Fitness Stats</button>
+                  </div>
+                </div>
+                <div class="pt-4 space-y-4">
+                  <div class="space-y-2">
+                    <label class="text-sm font-medium">Bio</label>
+                    <textarea rows="4" class="w-full px-3 py-2 border rounded-md">Fitness enthusiast with a passion for weight training and nutrition. Looking to improve my strength and endurance.</textarea>
+                  </div>
+                  <div class="grid grid-cols-3 gap-4">
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium">Age</label>
+                      <input type="text" value="22" class="w-full h-10 px-3 py-2 border rounded-md">
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium">Height</label>
+                      <input type="text" value="5'10"" class="w-full h-10 px-3 py-2 border rounded-md">
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-sm font-medium">Weight (Kg)</label>
+                      <input type="text" value="65" class="w-full h-10 px-3 py-2 border rounded-md">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Workout Stats Card -->
+            <div class="bg-white rounded-lg border shadow-sm col-span-3">
+              <div class="p-6 border-b">
+                <h3 class="text-2xl font-semibold">Workout Statistics</h3>
+              </div>
+              <div class="p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  <div class="bg-gray-50 p-4 rounded-lg text-center">
+                    <div class="text-3xl font-bold text-purple-600">24</div>
+                    <div class="text-sm text-gray-500">Workouts Completed</div>
+                  </div>
+                  <div class="bg-gray-50 p-4 rounded-lg text-center">
+                    <div class="text-3xl font-bold text-purple-600">87%</div>
+                    <div class="text-sm text-gray-500">Adherence Rate</div>
+                  </div>
+                  <div class="bg-gray-50 p-4 rounded-lg text-center">
+                    <div class="text-3xl font-bold text-purple-600">18</div>
+                    <div class="text-sm text-gray-500">Hours Trained</div>
+                  </div>
+                  <div class="bg-gray-50 p-4 rounded-lg text-center">
+                    <div class="text-3xl font-bold text-purple-600">5</div>
+                    <div class="text-sm text-gray-500">Fitness Goals</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Navigation functionality
+    function setActiveNav(element, sectionId) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+        section.classList.add('hidden');
+      });
+      
+      // Show the selected section
+      const activeSection = document.getElementById(sectionId);
+      activeSection.classList.remove('hidden');
+      activeSection.classList.add('active');
+      
+      // Update nav styles
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        link.classList.remove('bg-purple-600');
+        link.classList.remove('text-white');
+        link.classList.add('text-gray-700');
+      });
+      
+      // Highlight active nav link
+      element.classList.add('active');
+      element.classList.add('bg-purple-600');
+      element.classList.add('text-white');
+      element.classList.remove('text-gray-700');
+    }
+    
+    // Show dashboard by default
+    window.onload = function() {
+      const defaultNav = document.querySelector('.nav-link');
+      setActiveNav(defaultNav, 'dashboard');
+    };
+  </script>
+</body>
+</html>
